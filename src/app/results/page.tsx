@@ -8,6 +8,7 @@ import ResultsTable from '../components/ResultsTable';
 import GradCAMViewer from '../components/GradCAMViewer';
 import ErrorMessage from '../components/ErrorMessage';
 import { AnalysisResult, SESSION_KEY } from '@/lib/types';
+import { getResult } from '@/lib/resultStore';
 import ChatPanel from '../components/ChatPanel';
 import { downloadDataUrl, downloadJson } from '@/lib/imageProcessing';
 import { downloadPdfReport } from '@/lib/pdf';
@@ -22,6 +23,9 @@ export default function ResultsPage() {
   const [isPdfGenerating, setIsPdfGenerating] = useState(false);
 
   useEffect(() => {
+    // Try in-memory store first (avoids mobile sessionStorage quota issues)
+    const memResult = getResult();
+    if (memResult) { setResult(memResult); return; }
     try {
       const raw = sessionStorage.getItem(SESSION_KEY);
       if (!raw) { router.replace('/'); return; }

@@ -10,6 +10,7 @@ import ChatPanel from './components/ChatPanel';
 import { analyzeImage, setApiUrl, getStoredApiUrl } from '@/lib/api';
 import { loadImage } from '@/lib/imageProcessing';
 import { AnalysisResult, SESSION_KEY } from '@/lib/types';
+import { setResult } from '@/lib/resultStore';
 
 export default function HomePage() {
   const router = useRouter();
@@ -79,7 +80,12 @@ export default function HomePage() {
         filename: currentFile.name,
       };
 
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(result));
+      setResult(result);
+      try {
+        sessionStorage.setItem(SESSION_KEY, JSON.stringify(result));
+      } catch {
+        // sessionStorage quota exceeded (common on mobile) — in-memory store is enough
+      }
       router.push('/results');
     } catch (err) {
       setError(
