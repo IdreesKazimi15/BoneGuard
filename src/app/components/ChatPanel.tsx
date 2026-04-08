@@ -51,7 +51,8 @@ export default function ChatPanel({ analysisResult }: ChatPanelProps) {
   const [input, setInput] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [model, setModel] = useState('qwen2:0.5b');
+  const useGroq = process.env.NEXT_PUBLIC_USE_GROQ === 'true';
+  const [model, setModel] = useState(useGroq ? 'llama-3.1-8b-instant' : 'qwen2:0.5b');
   const [size, setSize] = useState({ width: 520, height: 560 });
   const [isResizing, setIsResizing] = useState(false);
   const dragOrigin = useRef({ x: 0, y: 0, width: 0, height: 0 });
@@ -285,12 +286,23 @@ export default function ChatPanel({ analysisResult }: ChatPanelProps) {
               onChange={(e) => setModel(e.target.value)}
               className="rounded-lg border border-navy-500 bg-navy-700 px-2 py-1 text-[10px] text-slate-400 focus:outline-none focus:border-accent/50"
             >
-              <option value="qwen2:0.5b">qwen2:0.5b (light)</option>
-              <option value="llama3.2">llama3.2</option>
-              <option value="llama3.1">llama3.1</option>
-              <option value="mistral">mistral</option>
-              <option value="gemma2">gemma2</option>
-              <option value="phi3">phi3</option>
+              {useGroq ? (
+                <>
+                  <option value="llama-3.1-8b-instant">llama-3.1-8b (fast)</option>
+                  <option value="llama-3.3-70b-versatile">llama-3.3-70b (smart)</option>
+                  <option value="mixtral-8x7b-32768">mixtral-8x7b</option>
+                  <option value="gemma2-9b-it">gemma2-9b</option>
+                </>
+              ) : (
+                <>
+                  <option value="qwen2:0.5b">qwen2:0.5b (light)</option>
+                  <option value="llama3.2">llama3.2</option>
+                  <option value="llama3.1">llama3.1</option>
+                  <option value="mistral">mistral</option>
+                  <option value="gemma2">gemma2</option>
+                  <option value="phi3">phi3</option>
+                </>
+              )}
             </select>
             <button
               onClick={handleClear}
