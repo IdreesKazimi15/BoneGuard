@@ -250,28 +250,6 @@ export async function downloadPdfReport(
     y += 4;
   }
 
-  // ── Disclaimer ─────────────────────────────────────────────────────────────
-  checkPageBreak(24);
-  doc.setFillColor('#1c0a00');
-  doc.setDrawColor('#92400e');
-  doc.setLineWidth(0.3);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 20, 2, 2, 'FD');
-
-  doc.setFontSize(7.5);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor('#fbbf24');
-  doc.text('RESEARCH USE ONLY — NOT FOR CLINICAL DIAGNOSIS', MARGIN + 4, y + 6);
-
-  doc.setFontSize(7);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor('#d97706');
-  const disclaimer =
-    'These AI-generated results have not been validated for clinical use. Detection and classification accuracy may vary ' +
-    'with image quality and patient population. Always consult a qualified radiologist for medical decisions.';
-  const lines = doc.splitTextToSize(disclaimer, CONTENT_W - 8);
-  doc.text(lines, MARGIN + 4, y + 12);
-  y += 26;
-
   // ── Footer on every page ───────────────────────────────────────────────────
   const pageCount = doc.getNumberOfPages();
   for (let p = 1; p <= pageCount; p++) {
