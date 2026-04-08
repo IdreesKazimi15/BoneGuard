@@ -162,9 +162,8 @@ export async function POST(req: NextRequest) {
 
     // Groq takes priority when API key is set (works in deployment)
     if (GROQ_KEY) {
-      const groqModel = model && !['llama3.2','llama3.1','mistral','gemma2','phi3','phi3.5','phi3:mini'].includes(model)
-        ? model
-        : DEFAULT_GROQ_MODEL;
+      const GROQ_MODELS = ['llama-3.1-8b-instant','llama-3.3-70b-versatile','mixtral-8x7b-32768','gemma2-9b-it'];
+      const groqModel = model && GROQ_MODELS.includes(model) ? model : DEFAULT_GROQ_MODEL;
       return await streamGroq(fullMessages, groqModel);
     }
 
