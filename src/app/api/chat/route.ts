@@ -8,7 +8,7 @@ const GROQ_URL    = 'https://api.groq.com/openai/v1/chat/completions';
 const DEFAULT_OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2:0.5b';
 const DEFAULT_GROQ_MODEL   = process.env.GROQ_MODEL   || 'llama-3.1-8b-instant';
 
-const SYSTEM_PROMPT = `You are BoneGuard Assistant, an AI helper built into the BoneGuard bone lesion detection and classification system. BoneGuard uses YOLOv8 for detection and EfficientNet-B0 for classification, with Grad-CAM for visual explanations.
+const SYSTEM_PROMPT = `You are BoneGuard Assistant, an AI helper built into the BoneGuard bone lesion detection and classification system. BoneGuard uses YOLOv8 for detection and EfficientNet-B3 for classification, with Grad-CAM for visual explanations.
 
 You help radiologists, researchers, and medical students understand:
 - AI-detected bone lesion findings from the current scan

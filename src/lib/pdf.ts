@@ -82,7 +82,7 @@ export async function downloadPdfReport(
   doc.setTextColor('#3b82f6');
   doc.text('RESEARCH USE ONLY', PAGE_W - MARGIN - 4, y + 7, { align: 'right' });
   doc.setTextColor('#475569');
-  doc.text('YOLOv8 + EfficientNet-B0', PAGE_W - MARGIN - 4, y + 13, { align: 'right' });
+  doc.text('YOLOv8 + EfficientNet-B3', PAGE_W - MARGIN - 4, y + 13, { align: 'right' });
 
   y += 28;
 

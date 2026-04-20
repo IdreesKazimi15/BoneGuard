@@ -51,7 +51,7 @@ export default function Header({ showNewAnalysis = false }: HeaderProps) {
         <nav className="hidden items-center gap-8 sm:flex">
           <ApiStatus />
           <span className="text-sm text-navy-400 font-mono">
-            YOLOv8 + EfficientNet-B0
+            YOLOv8 + EfficientNet-B3
           </span>
           {showNewAnalysis && (
             <button
@@ -109,7 +109,7 @@ export default function Header({ showNewAnalysis = false }: HeaderProps) {
             </button>
           )}
           <div className="text-xs text-center text-navy-400 font-mono">
-            YOLOv8 + EfficientNet-B0
+            YOLOv8 + EfficientNet-B3
           </div>
         </div>
       )}

@@ -147,7 +147,7 @@ export default function HomePage() {
               Upload a radiograph and let BoneGuard AI detect, classify, and
               explain bone lesions using{' '}
               <span className="text-accent-light font-semibold">YOLOv8</span> +{' '}
-              <span className="text-accent-light font-semibold">EfficientNet-B0</span>{' '}
+              <span className="text-accent-light font-semibold">EfficientNet-B3</span>{' '}
               with Grad-CAM visual explanations.
             </p>
 
