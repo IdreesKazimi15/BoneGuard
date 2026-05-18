@@ -1,6 +1,14 @@
 import { PredictionResponse } from './types';
 
-const DEFAULT_TIMEOUT_MS = 30_000;
+// HuggingFace Spaces cold starts can take 60-120s; warm inference ~15-25s.
+// Set timeout high enough to cover a cold start without false aborts.
+const DEFAULT_TIMEOUT_MS = 120_000;
+const WARMUP_TIMEOUT_MS = 5_000;
+
+// Hardcoded production backend so the deployed site works even if the Vercel
+// NEXT_PUBLIC_API_URL env var is missing. Local dev should override via
+// .env.local (NEXT_PUBLIC_API_URL=http://localhost:8000).
+const DEFAULT_API_URL = 'https://gunsleuth-boneguard-backend.hf.space';
 
 function getApiBase(): string {
   if (typeof window !== 'undefined') {
@@ -9,7 +17,7 @@ function getApiBase(): string {
   }
   return (
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ||
-    'http://localhost:8000'
+    DEFAULT_API_URL
   );
 }
 
@@ -24,10 +32,25 @@ export function getStoredApiUrl(): string {
     return (
       sessionStorage.getItem('boneguard_api_url') ||
       process.env.NEXT_PUBLIC_API_URL ||
-      'http://localhost:8000'
+      DEFAULT_API_URL
     );
   }
-  return process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  return process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+}
+
+/**
+ * Fire-and-forget ping to wake a sleeping HF Spaces container.
+ * Safe to call on every page mount: only does network work the first time
+ * the user lands on a page that needs the backend.
+ */
+export async function warmupBackend(): Promise<void> {
+  try {
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), WARMUP_TIMEOUT_MS);
+    await fetch(`${getApiBase()}/health`, { signal: controller.signal });
+  } catch {
+    // Swallow errors — warmup is best-effort
+  }
 }
 
 export async function analyzeImage(
@@ -73,7 +96,7 @@ export async function analyzeImage(
     if (err instanceof Error) {
       if (err.name === 'AbortError') {
         throw new Error(
-          'Request timed out after 30 s. Check that the backend is running and reachable.'
+          'Request timed out after 2 minutes. The backend may be cold-starting; please try again.'
         );
       }
       if (

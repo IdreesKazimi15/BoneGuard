@@ -7,7 +7,7 @@ import ImageUploader from './components/ImageUploader';
 import LoadingSpinner from './components/LoadingSpinner';
 import ErrorMessage from './components/ErrorMessage';
 import ChatPanel from './components/ChatPanel';
-import { analyzeImage, setApiUrl, getStoredApiUrl } from '@/lib/api';
+import { analyzeImage, setApiUrl, getStoredApiUrl, warmupBackend } from '@/lib/api';
 import { loadImage } from '@/lib/imageProcessing';
 import { AnalysisResult, SESSION_KEY } from '@/lib/types';
 import { setResult } from '@/lib/resultStore';
@@ -23,6 +23,9 @@ export default function HomePage() {
 
   useEffect(() => {
     setApiUrlState(getStoredApiUrl());
+    // Wake the HF Spaces container in the background so the user's first
+    // prediction request doesn't pay the cold-start penalty.
+    warmupBackend();
   }, []);
 
   const handleApiUrlChange = useCallback((url: string) => {
