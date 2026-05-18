@@ -1,11 +1,19 @@
 import { Detection } from './types';
 
 export const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+export const ACCEPTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
 export const MAX_FILE_SIZE_MB = 20;
 
 export function validateImageFile(file: File): string | null {
-  if (!ACCEPTED_TYPES.includes(file.type)) {
-    return 'Unsupported format. Please upload a JPG, PNG, or WebP image.';
+  // Some browsers / OS configurations report '.jpg' as 'image/jpg' (missing 'e')
+  // or as an empty string. Fall back to extension check so JPG uploads aren't
+  // silently rejected.
+  const mimeOk = ACCEPTED_TYPES.includes(file.type) || file.type === 'image/jpg';
+  const extOk = ACCEPTED_EXTENSIONS.some((ext) =>
+    file.name.toLowerCase().endsWith(ext)
+  );
+  if (!mimeOk && !extOk) {
+    return 'Unsupported format. Please upload a JPG, JPEG, PNG, or WebP image.';
   }
   if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
     return `File too large. Maximum size is ${MAX_FILE_SIZE_MB} MB.`;

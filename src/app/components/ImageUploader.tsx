@@ -5,11 +5,17 @@ import {
   validateImageFile,
   fileToDataUrl,
   ACCEPTED_TYPES,
+  ACCEPTED_EXTENSIONS,
   MAX_FILE_SIZE_MB,
 } from '@/lib/imageProcessing';
 import { parseDicomBuffer, readFileAsArrayBuffer, type DicomInfo } from '@/lib/dicom';
 
-const ALL_ACCEPTED = [...ACCEPTED_TYPES, '.dcm', 'application/dicom'];
+const ALL_ACCEPTED = [
+  ...ACCEPTED_TYPES,
+  ...ACCEPTED_EXTENSIONS,
+  '.dcm',
+  'application/dicom',
+];
 
 interface ImageUploaderProps {
   onImageReady: (dataUrl: string, file: File) => void;

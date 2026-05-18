@@ -38,12 +38,30 @@ export default function HomePage() {
 
   const handleLoadExample = useCallback(async () => {
     setError(null);
+    // Try several plausible sample filenames so a user-added .jpeg or .png also works.
+    const candidates = [
+      '/sample-xray.jpeg',
+      '/sample-xray.jpg',
+      '/sample-xray.png',
+    ];
     try {
-      // Load the local sample image
-      const res = await fetch('/sample-xray.jpg');
-      if (!res.ok) throw new Error('Sample image not found. Add sample-xray.jpg to /public.');
-      const blob = await res.blob();
-      const file = new File([blob], 'sample-xray.jpg', { type: 'image/jpeg' });
+      let blob: Blob | null = null;
+      let chosenName = 'sample-xray.jpg';
+      for (const path of candidates) {
+        const res = await fetch(path);
+        if (res.ok) {
+          blob = await res.blob();
+          chosenName = path.replace(/^\//, '');
+          break;
+        }
+      }
+      if (!blob) {
+        throw new Error(
+          'Sample image not found. Add sample-xray.jpg (or .jpeg / .png) to /public.'
+        );
+      }
+      const mime = blob.type || 'image/jpeg';
+      const file = new File([blob], chosenName, { type: mime });
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;

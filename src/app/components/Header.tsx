@@ -69,7 +69,7 @@ export default function Header({ showNewAnalysis = false }: HeaderProps) {
             </button>
           )}
           <a
-            href="https://github.com"
+            href="https://github.com/IdreesKazimi15/BoneGuard"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 text-sm text-slate-400 hover:text-white transition-colors"
