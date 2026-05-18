@@ -38,30 +38,13 @@ export default function HomePage() {
 
   const handleLoadExample = useCallback(async () => {
     setError(null);
-    // Try several plausible sample filenames so a user-added .jpeg or .png also works.
-    const candidates = [
-      '/sample-xray.jpeg',
-      '/sample-xray.jpg',
-      '/sample-xray.png',
-    ];
     try {
-      let blob: Blob | null = null;
-      let chosenName = 'sample-xray.jpg';
-      for (const path of candidates) {
-        const res = await fetch(path);
-        if (res.ok) {
-          blob = await res.blob();
-          chosenName = path.replace(/^\//, '');
-          break;
-        }
+      const res = await fetch('/sample-xray.jpeg');
+      if (!res.ok) {
+        throw new Error('Sample image not found. Add sample-xray.jpeg to /public.');
       }
-      if (!blob) {
-        throw new Error(
-          'Sample image not found. Add sample-xray.jpg (or .jpeg / .png) to /public.'
-        );
-      }
-      const mime = blob.type || 'image/jpeg';
-      const file = new File([blob], chosenName, { type: mime });
+      const blob = await res.blob();
+      const file = new File([blob], 'sample-xray.jpeg', { type: 'image/jpeg' });
       const reader = new FileReader();
       reader.onload = () => {
         const dataUrl = reader.result as string;
@@ -73,7 +56,7 @@ export default function HomePage() {
       setError(
         err instanceof Error
           ? err.message
-          : 'Could not load example image. Add sample-xray.jpg to the /public folder.'
+          : 'Could not load example image. Add sample-xray.jpeg to the /public folder.'
       );
     }
   }, []);
