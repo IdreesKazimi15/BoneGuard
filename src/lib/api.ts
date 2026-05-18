@@ -27,6 +27,16 @@ export function setApiUrl(url: string): void {
   }
 }
 
+export function resetApiUrl(): void {
+  if (typeof window !== 'undefined') {
+    sessionStorage.removeItem('boneguard_api_url');
+  }
+}
+
+export function getDefaultApiUrl(): string {
+  return process.env.NEXT_PUBLIC_API_URL || DEFAULT_API_URL;
+}
+
 export function getStoredApiUrl(): string {
   if (typeof window !== 'undefined') {
     return (
